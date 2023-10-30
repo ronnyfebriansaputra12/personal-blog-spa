@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->string('nama_menu');
+            $table->string('url');
             $table->timestamps();
         });
     }

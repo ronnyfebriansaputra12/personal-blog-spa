@@ -18,6 +18,7 @@
                         <thead>
                             <th>Nama Menu</th>
                             <th>Group Menu</th>
+                            <th>URL</th>
                             <th>Action</th>
                         </thead>
                     </table>
@@ -51,6 +52,10 @@
                             <label for="nama_menu">Nama Menu</label>
                             <input type="text" class="form-control" id="nama_menu" name="nama_menu">
                         </div>
+                        <div class="form-group">
+                            <label for="url">URL</label>
+                            <input type="text" class="form-control" id="url" name="url">
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -75,6 +80,9 @@
                     data: 'group-menu',
                     name: 'group-menu'
                 }, {
+                    data: 'url',
+                    name: 'url'
+                }, {
                     data: 'action',
                     name: 'Action'
                 }]
@@ -94,6 +102,7 @@
                     data: {
                         'group_id': $('#group_id').val(),
                         'nama_menu': $('#nama_menu').val(),
+                        'url': $('#url').val(),
                     },
                     success: function(response) {
                         console.log(response);
@@ -106,11 +115,26 @@
                         } else {
                             $('.alert-success').removeClass('d-none');
                             $('.alert-success').html(response.success);
+                            setTimeout(function() {
+                                $('#exampleModal').modal('hide');
+                                $('.alert-success').addClass(
+                                    'd-none');
+                            }, 500);
+                            $('#myTable').DataTable().ajax.reload();
                         }
-                        $('#myTable').DataTable().ajax.reload();
                     }
                 });
                 e.stopImmediatePropagation();
+            });
+
+            // Menambahkan event handler untuk menutup modal
+            $('#exampleModal').on('hidden.bs.modal', function(e) {
+                // Menghilangkan alert ketika modal ditutup
+                $('.alert').addClass('d-none');
+
+                $('#group_id').val('');
+                $('#nama_menu').val('');
+                $('#url').val('');
             });
         });
 
@@ -129,16 +153,19 @@
                     $('#exampleModal').modal('show');
                     $('#group_id').val(response.result.group_id);
                     $('#nama_menu').val(response.result.nama_menu);
+                    $('#url').val(response.result.url);
 
                     // Next, proses Simpan data
                     $('.tombol-simpan').off('click').on('click', function(e) {
                         var group_id = $('#group_id').val();
                         var nama_menu = $('#nama_menu').val();
+                        var url = $('#url').val();
 
                         // Buat objek data yang akan dikirim
                         var data = {
                             group_id: group_id,
-                            nama_menu: nama_menu
+                            nama_menu: nama_menu,
+                            url: url
                         };
                         $.ajax({
                             url: 'menu/' + id,
@@ -176,6 +203,7 @@
 
                 $('#group_id').val('');
                 $('#nama_menu').val('');
+                $('#url').val('');
             });
         });
 

@@ -50,6 +50,7 @@ class MenuController extends Controller
         $validasi = Validator::make($request->all(), [
             'group_id' => 'required',
             'nama_menu' => 'required',
+            'url' => 'required',
         ]);
 
         if ($validasi->fails()) {
@@ -88,6 +89,7 @@ class MenuController extends Controller
         $validasi = Validator::make($request->all(), [
             'group_id' => 'required',
             'nama_menu' => 'required',
+            'url' => 'required',
         ]);
 
         if ($validasi->fails()) {
