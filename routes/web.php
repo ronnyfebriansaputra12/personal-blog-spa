@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -61,3 +62,9 @@ Route::get('/menu/{id}/edit', [MenuController::class, 'edit']);
 Route::put('/menu/{id}', [MenuController::class, 'update']);
 Route::delete('/menu/{id}', [MenuController::class, 'destroy']);
 
+Route::get('/view-role', [RoleController::class, 'viewRole']);
+Route::get('/role', [RoleController::class, 'index']);
+Route::post('/role', [RoleController::class, 'store']);
+Route::get('/role/{id}/edit', [RoleController::class, 'edit']);
+Route::put('/role/{id}', [RoleController::class, 'update']);
+Route::delete('/role/{id}', [RoleController::class, 'destroy']);

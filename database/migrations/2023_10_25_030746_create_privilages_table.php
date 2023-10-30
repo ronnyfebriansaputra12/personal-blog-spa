@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('menu_id');
-            $table->integer('view')->default(0);
-            $table->integer('edit')->default(0);
-            $table->integer('delete')->default(0);
-            $table->integer('other')->default(0);
+            $table->boolean('view')->default(false);
+            $table->boolean('edit')->default(false);
+            $table->boolean('delete')->default(false);
+            $table->boolean('other')->default(false);
             $table->timestamps();
         });
     }
