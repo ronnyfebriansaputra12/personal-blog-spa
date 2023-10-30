@@ -17,8 +17,7 @@
                     alt="User profile picture">
             </div>
             <div class="info">
-                <a href="{{ url('/profile') }}" style="text-decoration: none"
-                    class="d-block">Admin</a>
+                <a href="{{ url('/profile') }}" style="text-decoration: none" class="d-block">Admin</a>
             </div>
         </div>
 
@@ -38,9 +37,9 @@
                     </a>
                 </li>
                 <li
-                    class="nav-item {{ Request::is('view-post', 'view-kategori',) ? 'menu-is-opening menu-open' : '' }}">
+                    class="nav-item {{ Request::is('view-post', 'view-kategori', 'view-menu','view-group-menu') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#"
-                        class="nav-link {{ Request::is('view-post', 'view-kategori',) ? 'active' : '' }}"
+                        class="nav-link {{ Request::is('view-post', 'view-kategori', 'view-menu','view-group-menu') ? 'active' : '' }}"
                         style="">
                         <i class="nav-icon fas fa-chart-pie"></i>
                         <p>
@@ -65,6 +64,24 @@
                             </a>
                         </li>
                         {{-- @endif --}}
+                        <li class="nav-header" style="">MENU</li>
+                        <li class="nav-item">
+                            <a href="{{ url('view-menu') }}" class="nav-link {{ Request::is('view-menu') ? 'active' : '' }}"
+                                style="">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Menu Master</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('view-group-menu') }}" class="nav-link {{ Request::is('view-group-menu') ? 'active' : '' }}"
+                                style="">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Group Menu</p>
+                            </a>
+                        </li>
+
+
+
 
                     </ul>
                 </li>

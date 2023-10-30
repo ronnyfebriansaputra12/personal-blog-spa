@@ -12,10 +12,10 @@ class Post extends Model
     protected $guarded=[];
 
     function kategori() {
-        return $this->hasOne(Kategori::class,'kategori_id','id');
+        return $this->belongsTo(Kategori::class,'kategori_id','id');
     }
 
     function user() {
-        return $this->hasMany(User::class, 'user_id','id');
+        return $this->belongsTo(User::class, 'user_id','id');
     }
 }

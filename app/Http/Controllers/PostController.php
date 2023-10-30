@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kategori;
 use App\Models\Post;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class PostController extends Controller
 {
@@ -14,17 +17,24 @@ class PostController extends Controller
 
     function viewPost()
     {
-        return view('post.index');
+        $kategoris = Kategori::all();
+        return view('post.index', compact('kategoris'));
     }
 
     public function index()
     {
-        $data = Post::all();
+        $data = Post::with('kategori')->get();
+
         return DataTables::of($data)
-        ->addColumn('aksi', function ($data){
-            return view('tombol')->with('data',$data);
-        })->make(true);
+            ->addColumn('kategori', function ($data) {
+                return $data->kategori->kategori;
+            })
+            ->addColumn('action', function ($data) {
+                return view('tombol')->with('data', $data);
+            })
+            ->make(true);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -39,7 +49,20 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $validasi = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'title' => 'required',
+            'content' => 'required',
+            'kategori_id' => 'required'
+        ]);
+
+        if ($validasi->fails()) {
+            return response()->json(['errors' => $validasi->errors()]);
+        } else {
+            Post::create($request->all());
+            return response()->json(['success' => 'Berhasil Menyimpan data']);
+        }
     }
 
     /**
@@ -69,8 +92,8 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post,$id)
     {
-        //
+        Post::where('id', $id)->delete();
     }
 }

@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('title',100);
-            $table->text('content');
-            $table->string('image')->nullable();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('kategori_id');
+            $table->string('nama_role',100)->default('');
+            $table->string('deskripsi')->default('');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('roles');
     }
 };

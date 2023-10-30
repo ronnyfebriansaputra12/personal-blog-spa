@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kategori;
+use App\Models\GroupMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
-class KategoriController extends Controller
+class GroupMenuController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
 
-    function viewKategori()
+    public function viewGroupMenu()
     {
-        return view('kategori.index');
+        return view('group-menu.index');
     }
-
 
     public function index()
     {
-        $data = Kategori::all();
+        $data = GroupMenu::all();
         return DataTables::of($data)
             ->addColumn('action', function ($data) {
-                return view('tombol')->with('data',$data);
+                return view('tombol')->with('data', $data);
             })->make(true);
     }
 
@@ -42,15 +41,15 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $validasi = Validator::make($request->all(), [
-            'kategori' => 'required',
+            'nama_group_menu' => 'required',
         ], [
-            'kategori.required' => 'Kategori Wajib diisi',
+            'nama_group_menu.required' => 'Kategori Wajib diisi',
         ]);
 
         if ($validasi->fails()) {
             return response()->json(['errors' => $validasi->errors()]);
         } else {
-            Kategori::create($request->all());
+            GroupMenu::create($request->all());
             return response()->json(['success' => 'Berhasil Menyimpan data']);
         }
     }
@@ -58,7 +57,7 @@ class KategoriController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Kategori $kategori)
+    public function show(GroupMenu $groupMenu)
     {
         //
     }
@@ -66,36 +65,37 @@ class KategoriController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id){
-        $data = Kategori::where('id',$id)->first();
+    public function edit(GroupMenu $groupMenu, $id)
+    {
+        $data = GroupMenu::find($id);
         return response()->json(['result' => $data]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, GroupMenu $groupMenu, $id)
     {
         $validasi = Validator::make($request->all(), [
-            'kategori' => 'required',
+            'nama_group_menu' => 'required',
         ], [
-            'kategori.required' => 'Kategori Wajib diisi',
+            'nama_group_menu.required' => 'Kategori Wajib diisi',
         ]);
 
         if ($validasi->fails()) {
             return response()->json(['errors' => $validasi->errors()]);
+        } else {
+            $groupMenu = GroupMenu::where('id',$id);
+            $groupMenu->update($request->all());
+            return response()->json(['success' => 'Berhasil Menyimpan data']);
         }
-        
-        $kategori = Kategori::where('id',$id);
-        $kategori->update($request->all());
-        return response()->json(['success' => 'Berhasil Mengubah data']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(GroupMenu $groupMenu, $id)
     {
-        Kategori::where('id',$id)->delete();
+        GroupMenu::where('id', $id)->delete();
     }
 }

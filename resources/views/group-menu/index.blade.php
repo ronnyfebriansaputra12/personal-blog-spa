@@ -16,7 +16,7 @@
                 <div id="example_wrapper">
                     <table id="myTable" class="table table-bordered table-striped">
                         <thead>
-                            <th>Kategori</th>
+                            <th>Group Menu</th>
                             <th>Action</th>
                         </thead>
                     </table>
@@ -38,8 +38,8 @@
 
                     <form action="" method="POST">
                         <div class="form-group">
-                            <label for="kategori">Kategori</label>
-                            <input type="text" class="form-control" id="kategori" name="kategori">
+                            <label for="nama_group_menu">Group Menu</label>
+                            <input type="text" class="form-control" id="nama_group_menu" name="nama_group_menu">
                         </div>
                     </form>
                 </div>
@@ -53,16 +53,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
-
-        
         $(document).ready(function() {
             $('#myTable').DataTable({
                 processing: true,
                 serverside: true,
-                ajax: "{{ url('kategori') }}",
+                ajax: "{{ url('group-menu') }}",
                 columns: [{
-                    data: 'kategori',
-                    name: 'Kategori'
+                    data: 'nama_group_menu',
+                    name: 'Nama Group Menu'
                 }, {
                     data: 'action',
                     name: 'Action'
@@ -70,108 +68,100 @@
             });
         });
 
-        //tambah data
         $('body').on('click', '.tombol-tambah', function(e) {
             e.preventDefault();
             $('#exampleModal').modal('show');
             $('.tombol-simpan').click(function(e) {
                 $.ajax({
-                    url: 'kategori',
+                    url: 'group-menu',
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: {
-                        'kategori': $('#kategori').val(),
-
+                        'nama_group_menu': $('#nama_group_menu').val()
                     },
                     success: function(response) {
                         if (response.errors) {
                             $('.alert-danger').removeClass('d-none');
                             $('.alert-danger').append("<ul>");
                             $.each(response.errors, function(key, value) {
-                                $('.alert-danger').find('ul').append("<li>" + value +
-                                    "</li>");
+                                $('.alert-danger').append("<li>" + value + ("</li>"))
                             });
-                            $('.alert-danger').append("</ul>");
-
                         } else {
                             $('.alert-success').removeClass('d-none');
                             $('.alert-success').html(response.success);
                         }
+                        // Sembunyikan modal setelah berhasil
+                        // $('#exampleModal').modal('hide');
                         $('#myTable').DataTable().ajax.reload();
                     }
                 });
                 e.stopImmediatePropagation();
-
             });
         });
 
-
+        //edit data
         $('body').on('click', '.tombol-edit', function(e) {
-            e.preventDefault(); // Hentikan tindakan default dari tautan
+            e.preventDefault();
 
             var id = $(this).data('id');
-
             // Pertama, ambil data kategori menggunakan permintaan AJAX GET
             $.ajax({
-                url: 'kategori/' + id + '/edit',
+                url: 'group-menu/' + id + '/edit',
                 type: 'GET',
                 success: function(response) {
+                    //data disimpan di response
                     $('#exampleModal').modal('show');
-                    $('#kategori').val(response.result.kategori);
+                    $('#nama_group_menu').val(response.result.nama_group_menu);
 
                     // Sekarang, tindakan simpan data saat tombol "Simpan" diklik
                     $('.tombol-simpan').off('click').on('click', function(e) {
                         e.preventDefault();
 
-                        // Kirim data kategori yang telah diubah melalui permintaan AJAX PUT
+                        // Kirim data group menu yang telah diubah melalui permintaan AJAX PUT
                         $.ajax({
-                            url: 'kategori/' + id,
+                            url: 'group-menu/' + id,
                             type: 'PUT',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
                                     'content')
                             },
                             data: {
-                                'kategori': $('#kategori').val(),
+                                'nama_group_menu': $('#nama_group_menu').val()
                             },
                             success: function(response) {
                                 if (response.errors) {
                                     $('.alert-danger').removeClass('d-none');
                                     $('.alert-danger').html(response.errors
-                                        .kategori); // Menampilkan pesan kesalahan
+                                        .nama_group_menu);
                                 } else {
                                     $('.alert-success').removeClass('d-none');
                                     $('.alert-success').html(response.success);
-                                    $('#exampleModal').modal(
-                                        'hide'
-                                    ); // Sembunyikan modal setelah berhasil
+                                    // Jeda 2 detik
+                                    setTimeout(function() {
+                                        $('#exampleModal').modal('hide');
+                                        $('.alert-success').addClass(
+                                            'd-none');
+                                    }, 500);
+
                                     $('#myTable').DataTable().ajax.reload();
                                 }
                             }
-                        });
+                        })
                     });
                 }
             });
 
-
-            // Menambahkan event handler untuk menutup modal
-            $('#exampleModal').on('hidden.bs.modal', function(e) {
-                // Menghilangkan alert ketika modal ditutup
-                $('.alert').addClass('d-none');
-
-                $('#kategori').val('');
-            });
         });
 
-        //delete data
+        //button hapus
         $('body').on('click', '.tombol-delete', function(e) {
             if (confirm('Hapus Data ?') == true) {
                 var id = $(this).data('id');
-                console.log(id);
+
                 $.ajax({
-                    url: 'kategori/' + id,
+                    url: 'group-menu/' + id,
                     type: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
@@ -182,20 +172,27 @@
             }
         });
 
+
+
+        // Menambahkan event handler untuk menutup modal
+        $('#exampleModal').on('hidden.bs.modal', function(e) {
+            // Menghilangkan alert ketika modal ditutup
+            $('.alert').addClass('d-none');
+
+            $('#nama_group_menu').val('');
+        });
+
         document.querySelector("#exampleModal .modal-footer button[data-dismiss='modal']").addEventListener("click",
             function() {
                 // Sembunyikan modal dengan menghilangkan kelas "show" dari elemen modal
                 document.querySelector("#exampleModal").classList.remove("show");
                 // Sembunyikan modal dengan menghilangkan kelas "show" dari elemen backdrop
                 document.querySelector(".modal-backdrop").classList.remove("show");
-
-                $('#kategori').val('');
+                $('#nama_group_menu').val('');
                 $('.alert-danger').addClass('d-none');
                 $('.alert-danger').html('')
-
                 $('.alert-success').addClass('d-none');
                 $('.alert-success').html('')
-
             });
     </script>
 @endsection

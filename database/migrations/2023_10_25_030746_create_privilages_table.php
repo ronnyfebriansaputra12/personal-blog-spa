@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('privilages', function (Blueprint $table) {
             $table->id();
-            $table->string('title',100);
-            $table->text('content');
-            $table->string('image')->nullable();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('kategori_id');
+            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('menu_id');
+            $table->integer('view')->default(0);
+            $table->integer('edit')->default(0);
+            $table->integer('delete')->default(0);
+            $table->integer('other')->default(0);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('privilages');
     }
 };
